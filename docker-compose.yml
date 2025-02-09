@@ -37,7 +37,7 @@ services:
   order-management:
     #container_name: order-management-app
     build:
-      context: ./order.management.microservice
+      context: ./order-management-microservice
       dockerfile: Dockerfile
     restart: always
     deploy:

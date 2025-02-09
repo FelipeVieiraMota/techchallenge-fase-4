@@ -1,0 +1,40 @@
+
+### POST
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+    "customerId": "d2f7a49a-4c2b-4c70-8c21-22a7c0199d3b",
+    "creationDate": "2025-01-27T10:00:00Z",
+    "total": 99.99,
+    "orderProducts": [
+        {
+            "productId": "a3c5b788-0f3c-4c50-bbe3-3bbd0c3f6d72",
+            "quantity": 2,
+            "unitPrice": 49.99
+        }
+    ]
+}
+
+
+### GET
+GET http://localhost:8080/api/orders
+Content-Type: application/json
+
+### GET by ID
+GET http://localhost:8080/api/orders/48bd7e35-39b7-4969-9e60-a66c5f0592fa
+Content-Type: application/json
+
+### PUT
+PUT http://localhost:8080/api/orders/48bd7e35-39b7-4969-9e60-a66c5f0592fa
+Content-Type: application/json
+
+{
+    "customerId": "d2f7a49a-4c2b-4c70-8c21-22a7c0199d3b",
+    "statusHistory": [
+        {
+            "previousStatus": "SHIPPED",
+            "newStatus": "DELIVERED"
+        }
+    ]
+}
