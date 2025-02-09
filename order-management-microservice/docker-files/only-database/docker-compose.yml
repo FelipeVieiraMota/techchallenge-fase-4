@@ -1,0 +1,26 @@
+services:
+  postgres:
+    container_name: order-management-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: order_management
+    networks:
+      - order-management-network
+    volumes:
+      - order-management-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  order-management-data:
+
+networks:
+  order-management-network:

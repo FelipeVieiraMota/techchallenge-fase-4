@@ -1,0 +1,22 @@
+A) Microsserviço de gestão de pedidos:
+Descrição funcional: centralizará o processamento de todos os pedidos,
+desde a criação até a conclusão. Isso inclui receber pedidos dos clientes,
+processar pagamentos (se aplicável) e coordenar com o microsserviço de
+logística de entrega para garantir a entrega eficiente dos produtos.
+Tecnologias e Abordagens:
+• Spring Boot para a estrutura do serviço.
+• Spring Data JPA para manipulação de dados dos pedidos.
+• Spring Cloud Stream para comunicação baseada em eventos com
+outros serviços, melhorando a coordenação de processos de negócios
+complexos.
+
+B) Microsserviço de Logística de Entrega:
+Descrição Funcional: este serviço cuidará de toda a logística
+relacionada à entrega de pedidos, desde a atribuição de entregadores até o
+rastreamento das entregas em tempo real. A função inclui calcular as rotas mais
+eficientes, estimar tempos de entrega e fornecer atualizações de status aos
+clientes.
+Tecnologias e Abordagens:
+• Spring Boot para a base do microsserviço.
+• Spring Data JPA para gerenciar as informações de entrega em um
+banco de dados.
