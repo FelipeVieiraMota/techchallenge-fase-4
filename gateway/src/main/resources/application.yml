@@ -1,0 +1,22 @@
+server:
+  port: 8080  # API Gateway runs on port 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: lb://ORDER-SERVICE  # Load balancer for order service
+          predicates:
+            - Path=/orders/**
+        - id: delivery-service
+          uri: lb://DELIVERY-SERVICE  # Load balancer for delivery service
+          predicates:
+            - Path=/deliveries/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
