@@ -13,6 +13,9 @@ spring:
         orderCreated-out-0:
           destination: orders.exchange
           content-type: application/json
+        orderDeleted-out-0:
+          destination: orders.delete.exchange
+          content-type: application/json
 
   # Database Configuration
   datasource:

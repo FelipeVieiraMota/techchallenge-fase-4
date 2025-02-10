@@ -14,10 +14,13 @@ spring:
           destination: orders.exchange
           content-type: application/json
           group: logistics-group
+        orderDeleted-in-0:
+          destination: orders.delete.exchange
+          group: delete-group
 
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/order_management
+    url: jdbc:postgresql://localhost:5433/order_management
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

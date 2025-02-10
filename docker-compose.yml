@@ -1,5 +1,8 @@
+version: "3.8"
+
 services:
 
+  ### RabbitMQ ###
   rabbitmq:
     image: rabbitmq:3-management
     container_name: order-management-rabbitmq
@@ -14,12 +17,13 @@ services:
     networks:
       - microservice-network
 
-  postgres:
+  ### Order Management - PostgreSQL ###
+  order-management-postgres:
     container_name: order-management-postgres
     image: postgres:latest
     restart: always
     ports:
-      - "5432:5432"
+      - "5432:5432"  # External:Internal (Keep internal as 5432)
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -27,30 +31,30 @@ services:
     networks:
       - microservice-network
     volumes:
-      -  microservice-data:/var/lib/postgresql/data
+      - order-management-data:/var/lib/postgresql/data  # Separate volume for this DB
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  ### Order Management - Application ###
   order-management:
-    #container_name: order-management-app
+    container_name: order-management-app-container
+    image: order-management-app-image
     build:
       context: ./order-management-microservice
       dockerfile: Dockerfile
     restart: always
-    deploy:
-      replicas: 3
     ports:
-      - "8080-8082:8080"
+      - "8080:8080"
     depends_on:
-      postgres:
+      order-management-postgres:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order_management
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-management-postgres:5432/order_management
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_RABBITMQ_HOST: rabbitmq
@@ -58,28 +62,48 @@ services:
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
       SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
     networks:
       - microservice-network
 
+  ### Delivery Logistic - PostgreSQL ###
+  delivery-logistic-postgres:
+    container_name: delivery-logistic-postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5433:5432"  # External 5433, but internal remains 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: delivery_logistic
+    networks:
+      - microservice-network
+    volumes:
+      - delivery-logistic-data:/var/lib/postgresql/data  # Separate volume for this DB
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ### Delivery Logistic - Application ###
   delivery-logistic:
-    #container_name: delivery-logistic-app
+    container_name: delivery-logistic-app-container
+    image: delivery-logistic-app-image
     build:
       context: ./delivery-logistic-microservice
       dockerfile: Dockerfile
     restart: always
-    deploy:
-      replicas: 3
     ports:
-      - "8092-8094:8080"
-    #ports:
-    #  - "8082:8082"
+      - "8082:8082"
     depends_on:
-      postgres:
+      delivery-logistic-postgres:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order_management
+      SPRING_DATASOURCE_URL: jdbc:postgresql://delivery-logistic-postgres:5432/delivery_logistic
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_RABBITMQ_HOST: rabbitmq
@@ -87,12 +111,21 @@ services:
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
       SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - microservice-network
 
+### Volumes (Separate for Each PostgreSQL Instance) ###
 volumes:
-  microservice-data:
+  order-management-data:
+  delivery-logistic-data:
 
+### Network ###
 networks:
   microservice-network:
     driver: bridge

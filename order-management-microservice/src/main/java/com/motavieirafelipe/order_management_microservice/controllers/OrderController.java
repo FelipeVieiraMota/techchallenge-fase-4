@@ -21,7 +21,7 @@ public class OrderController {
     private final OrderOrchestrator orderOrchestrator;
 
     @PostMapping("/sent-event")
-    public ResponseEntity<String> pushOrderToQueue(@RequestBody OrderDto order) {
+    public ResponseEntity<String> pushOrderToQueue(@RequestBody OrderDto order) throws OrderException {
         orderOrchestrator.pushOrderToQueue(order);
         return ResponseEntity.status(HttpStatus.CREATED).body("Order successfully sent.");
     }
@@ -37,7 +37,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto order) throws URISyntaxException {
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto order) throws URISyntaxException, OrderException {
         final OrderDto createdOrder = orderOrchestrator.createOrder(order);
         final String uri = "/api/orders" + createdOrder.orderId();
         return ResponseEntity.created(new URI(uri)).body(createdOrder);
@@ -53,6 +53,12 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable UUID orderId) {
         orderOrchestrator.deleteOrder(orderId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll() {
+        orderOrchestrator.deleteAll();
         return ResponseEntity.noContent().build();
     }
 }

@@ -33,7 +33,7 @@ public class OrderOrchestrator {
     private final IOrderCreatedEventMapper orderCreatedEventMapper;
 
     @Transactional
-    public OrderDto createOrder(OrderDto orderDto) {
+    public OrderDto createOrder(OrderDto orderDto) throws OrderException {
 
         final var order = orderMapper.toEntity(orderDto);
 
@@ -49,7 +49,7 @@ public class OrderOrchestrator {
         return createdOrder;
     }
 
-    public void pushOrderToQueue(OrderDto createdOrder) {
+    public void pushOrderToQueue(OrderDto createdOrder) throws OrderException {
 
         try {
             orderProducer.sendOrderCreatedEvent(orderCreatedEventMapper.toEvent(createdOrder));
@@ -110,4 +110,7 @@ public class OrderOrchestrator {
         return updatedOrder;
     }
 
+    public void deleteAll() {
+        orderRepository.deleteAll();
+    }
 }

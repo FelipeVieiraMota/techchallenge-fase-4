@@ -16,25 +16,26 @@ Content-Type: application/json
     ]
 }
 
+### GET
+GET http://localhost:8082/api/deliveries
+
 
 ### GET
 GET http://localhost:8080/api/orders
 Content-Type: application/json
 
 ### GET by ID
-GET http://localhost:8080/api/orders/48bd7e35-39b7-4969-9e60-a66c5f0592fa
+GET http://localhost:8080/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
 Content-Type: application/json
 
 ### PUT
-PUT http://localhost:8080/api/orders/48bd7e35-39b7-4969-9e60-a66c5f0592fa
+PUT http://localhost:8080/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
 Content-Type: application/json
 
 {
-    "customerId": "d2f7a49a-4c2b-4c70-8c21-22a7c0199d3b",
-    "statusHistory": [
-        {
-            "previousStatus": "SHIPPED",
-            "newStatus": "DELIVERED"
-        }
-    ]
+  "status": "PROCESSING"
 }
+
+### DELETE
+DELETE http://localhost:8080/api/orders
+Content-Type: application/json
