@@ -180,7 +180,7 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - "5435:5432"  # External 5434, but internal remains 5432
+      - "5435:5432"  # External 5435, but internal remains 5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
