@@ -1,0 +1,33 @@
+# Server Configuration
+server:
+  port: 8084
+
+# API Name
+spring:
+  application:
+    name: product_catalog_microservice
+
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://postgres:5432/product_catalog
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  batch:
+    jdbc:
+      initialize-schema: always
+  sql:
+    init:
+      mode: always
+
+# Swagger Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true

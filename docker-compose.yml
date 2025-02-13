@@ -125,7 +125,7 @@ services:
       - microservice-network
 
 
-  ### Delivery Logistic - PostgreSQL ###
+  ### Product Catalog - PostgreSQL ###
   product-catalog-postgres:
     container_name: product-catalog-postgres
     image: postgres:latest
@@ -141,10 +141,11 @@ services:
     volumes:
       - product-catalog-data:/var/lib/postgresql/data  # Separate volume for this DB
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
-      timeout: 5s
       retries: 5
+      start_period: 30s
+      timeout: 10s
 
   ### Product Catalog - Application ###
   product-catalog:
@@ -155,24 +156,66 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8089:8089"
+      - "8084:8084"
     depends_on:
       product-catalog-postgres:
         condition: service_healthy
-      # r#abbitmq:
-       # condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://product-catalog-postgres:5432/product_catalog
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-     # SPRING_RABBITMQ_HOST: rabbitmq
-     # SPRING_RABBITMQ_PORT: 5672
-     # SPRING_RABBITMQ_USERNAME: guest
-     # SPRING_RABBITMQ_PASSWORD: guest
       SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
-      SPRING_JPA_HIBERNATE_DDL_AUTO: create
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservice-network
+
+
+  ### Client - PostgreSQL ###
+  client-postgres:
+    container_name: client-postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5435:5432"  # External 5434, but internal remains 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: client
+    networks:
+      - microservice-network
+    volumes:
+      - client-data:/var/lib/postgresql/data  # Separate volume for this DB
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  ### Client Catalog - Application ###
+  client-catalog:
+    container_name: client-app-container
+    image: client-app-image
+    build:
+      context: ./client_microservice
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8085:8085"
+    depends_on:
+      client-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://client-postgres:5432/client
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -185,6 +228,7 @@ volumes:
   order-management-data:
   delivery-logistic-data:
   product-catalog-data:
+  client-data:
 
 ### Network ###
 networks:

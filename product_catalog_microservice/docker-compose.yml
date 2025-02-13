@@ -3,11 +3,11 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: product_catalog_microservice
+      POSTGRES_DB: product_catalog
     networks:
       - produto-api-network
     volumes:
@@ -25,12 +25,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8084:8084"
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product_catalog_microservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product_catalog
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     networks:
