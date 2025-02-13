@@ -17,6 +17,8 @@ services:
     networks:
       - microservice-network
 
+  
+  
   ### Order Management - PostgreSQL ###
   order-management-postgres:
     container_name: order-management-postgres
@@ -65,6 +67,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: create
     networks:
       - microservice-network
+
+
 
   ### Delivery Logistic - PostgreSQL ###
   delivery-logistic-postgres:
@@ -120,10 +124,67 @@ services:
     networks:
       - microservice-network
 
+
+  ### Delivery Logistic - PostgreSQL ###
+  product-catalog-postgres:
+    container_name: product-catalog-postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5434:5432"  # External 5434, but internal remains 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: product_catalog
+    networks:
+      - microservice-network
+    volumes:
+      - product-catalog-data:/var/lib/postgresql/data  # Separate volume for this DB
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ### Product Catalog - Application ###
+  product-catalog:
+    container_name: product-catalog-app-container
+    image: product-catalog-app-image
+    build:
+      context: ./product_catalog_microservice
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8089:8089"
+    depends_on:
+      product-catalog-postgres:
+        condition: service_healthy
+      # r#abbitmq:
+       # condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-catalog-postgres:5432/product_catalog
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+     # SPRING_RABBITMQ_HOST: rabbitmq
+     # SPRING_RABBITMQ_PORT: 5672
+     # SPRING_RABBITMQ_USERNAME: guest
+     # SPRING_RABBITMQ_PASSWORD: guest
+      SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservice-network
+
+
 ### Volumes (Separate for Each PostgreSQL Instance) ###
 volumes:
   order-management-data:
   delivery-logistic-data:
+  product-catalog-data:
 
 ### Network ###
 networks:
