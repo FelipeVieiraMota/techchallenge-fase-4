@@ -33,11 +33,11 @@ public interface IOrderMapper {
             return null;
         }
 
-        final UUID id = orderProductEntity.getId();
+        final UUID id = orderProductEntity.getOrderProductId();
         final UUID productId = orderProductEntity.getProductId();
         final int quantity = orderProductEntity.getQuantity();
         final double unitPrice = orderProductEntity.getUnitPrice();
 
-        return new OrderProductDto( id, null, productId, quantity, unitPrice );
+        return new OrderProductDto( id, productId, quantity, unitPrice );
     }
 }

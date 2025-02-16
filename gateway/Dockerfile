@@ -21,5 +21,5 @@ FROM eclipse-temurin:17-jre
 RUN groupadd --system spring && useradd --system --gid spring --create-home spring
 USER spring:spring
 COPY --from=build /app/target/*.jar /app/app.jar
-EXPOSE 8084
+EXPOSE 8081
 ENTRYPOINT ["java","-jar","/app/app.jar"]

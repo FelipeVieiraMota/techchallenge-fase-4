@@ -1,6 +1,5 @@
 package com.motavieirafelipe.order_management_microservice.events;
 
-import com.motavieirafelipe.order_management_microservice.enums.DeliveryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,6 @@ public class OrderCreatedEvent {
     private UUID orderId;
     private UUID customerId;
     private List<ProductCreatedEvent> productCreatedEvents;
-    private DeliveryStatus deliveryStatus;
     private Date departureDate;
     private Date estimatedDeliveryDate;
     private Date deliveryDate;

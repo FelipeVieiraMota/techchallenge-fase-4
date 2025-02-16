@@ -1,18 +1,18 @@
 services:
-  order-management-db-postgres:
-    container_name: order-management-db
+  delivery-management-db-postgres:
+    container_name: delivery-management-db
     image: postgres:latest
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: order_management
+      POSTGRES_DB: delivery_logistic
     networks:
       - order-management-network
     volumes:
-      - order-management-data:/var/lib/postgresql/data
+      - delivery-logistic-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -20,7 +20,7 @@ services:
       retries: 5
 
 volumes:
-  order-management-data:
+  delivery-logistic-data:
 
 networks:
   order-management-network:

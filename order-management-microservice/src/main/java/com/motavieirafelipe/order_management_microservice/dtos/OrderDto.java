@@ -10,31 +10,28 @@ import java.util.UUID;
 public record OrderDto (
     UUID orderId,
     UUID customerId,
+    UUID deliveryId,
     OrderStatus status,
     Date creationDate,
     BigDecimal total,
-    List<OrderProductDto> orderProducts,
-    PaymentDto payment,
-    DeliveryDto delivery
+    List<OrderProductDto> orderProducts
 ){
     public OrderDto (
         UUID customerId,
+        UUID deliveryId,
         OrderStatus status,
         Date creationDate,
         BigDecimal total,
-        List<OrderProductDto> orderProducts,
-        PaymentDto payment,
-        DeliveryDto delivery
+        List<OrderProductDto> orderProducts
     ){
         this(
             null,
             customerId,
+            deliveryId,
             status,
             creationDate,
             total,
-            orderProducts,
-            payment,
-            delivery
+            orderProducts
         );
     }
 }

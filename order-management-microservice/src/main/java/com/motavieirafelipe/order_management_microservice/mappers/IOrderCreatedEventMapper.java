@@ -13,11 +13,6 @@ import java.util.List;
 public interface IOrderCreatedEventMapper {
 
     @Mapping(source = "orderProducts", target = "productCreatedEvents")
-    @Mapping(source = "status", target = "deliveryStatus")
-    @Mapping(source = "delivery.departureDate", target = "departureDate")
-    @Mapping(source = "delivery.estimatedDeliveryDate", target = "estimatedDeliveryDate")
-    @Mapping(source = "delivery.deliveryDate", target = "deliveryDate")
-    @Mapping(source = "delivery.currentLocation", target = "currentLocation")
     OrderCreatedEvent toEvent(OrderDto createdOrder);
 
     ProductCreatedEvent toProductEvent(OrderProductDto orderProductDto);

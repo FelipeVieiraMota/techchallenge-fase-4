@@ -1,9 +1,11 @@
 package com.motavieirafelipe.order_management_microservice.controllers;
 
 import com.motavieirafelipe.order_management_microservice.dtos.OrderDto;
+import com.motavieirafelipe.order_management_microservice.dtos.TrackingDto;
 import com.motavieirafelipe.order_management_microservice.exceptions.OrderException;
 import com.motavieirafelipe.order_management_microservice.services.OrderOrchestrator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDto>> getAllOrders() {
-        return ResponseEntity.ok(orderOrchestrator.getAllOrders());
+    public ResponseEntity<Page<OrderDto>> getAllOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(orderOrchestrator.getAllOrders(page, size));
     }
 
     @GetMapping("/{orderId}")
@@ -60,5 +65,21 @@ public class OrderController {
     public ResponseEntity<Void> deleteAll() {
         orderOrchestrator.deleteAll();
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/track")
+    public ResponseEntity<String> trackOrder(
+            @RequestParam UUID orderId,
+            @RequestBody TrackingDto dto
+    ) throws OrderException {
+        orderOrchestrator.trackOrder(orderId, dto);
+        return ResponseEntity.ok("Tracking information saved.");
+    }
+
+    @GetMapping("/track/{orderId}")
+    public ResponseEntity<List<TrackingDto>> trackOrderById(
+            @PathVariable UUID orderId
+    ) throws OrderException {
+        return ResponseEntity.ok(orderOrchestrator.getTrackById(orderId));
     }
 }

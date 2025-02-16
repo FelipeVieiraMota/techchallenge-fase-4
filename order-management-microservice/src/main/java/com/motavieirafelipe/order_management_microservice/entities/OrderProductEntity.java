@@ -1,5 +1,6 @@
 package com.motavieirafelipe.order_management_microservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,10 +19,11 @@ public class OrderProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID orderProductId;
 
     @ManyToOne
     @JoinColumn(name = "orderId", nullable = false)
+    @JsonIgnore
     private OrderEntity order;
 
     // Reference to Product (via API, not FK in DB)

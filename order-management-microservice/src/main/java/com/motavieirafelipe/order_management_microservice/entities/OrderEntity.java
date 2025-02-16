@@ -26,18 +26,16 @@ public class OrderEntity {
     // Reference to Customer (via API, not FK in DB)
     private UUID customerId;
 
+    // Reference to Delivery (via API, not FK in DB)
+    private UUID deliveryId;
+
+    // Default status when creating an order
     @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.CREATED;// Default status when creating an order
+    private OrderStatus status = OrderStatus.CREATED;
 
     private Date creationDate;
     private BigDecimal total;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProductEntity> orderProducts;
-
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private PaymentEntity payment;
-
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private DeliveryEntity delivery;
 }

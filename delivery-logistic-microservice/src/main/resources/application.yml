@@ -20,11 +20,13 @@ spring:
 
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5433/order_management
+    url: jdbc:postgresql://localhost:5433/delivery_logistic
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create
     show-sql: true
