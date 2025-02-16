@@ -1,22 +1,87 @@
 server:
-  port: 8080  # API Gateway runs on port 8080
+  port: 8081
 
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       routes:
-        - id: order-service
-          uri: lb://ORDER-SERVICE  # Load balancer for order service
+        - id: order-management-service
+          uri: http://order-management:8080
           predicates:
-            - Path=/orders/**
-        - id: delivery-service
-          uri: lb://DELIVERY-SERVICE  # Load balancer for delivery service
-          predicates:
-            - Path=/deliveries/**
+            - Path=/api/orders/**
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+        # Swagger Pedido
+        - id: order-management-swagger
+          uri: http://order-management:8080
+          predicates:
+            - Path=/swagger/pedido/v3/api-docs
+          filters:
+            - SetPath=/api-docs
+
+        - id: delivery-management-service
+          uri: http://delivery-logistic:8082
+          predicates:
+            - Path=/api/deliveries/**
+
+        # Swagger Delivery
+        - id: delivery-management-swagger
+          uri: http://delivery-logistic:8082
+          predicates:
+            - Path=/swagger/delivery/v3/api-docs
+          filters:
+            - SetPath=/api-docs
+
+        - id: product-catalog-service
+          uri: http://product-catalog:8084
+          predicates:
+            - Path=/api/produtos/**
+
+        # Swagger Produto
+        - id: product-catalog-swagger
+          uri: http://product-catalog:8084
+          predicates:
+            - Path=/swagger/produto/v3/api-docs
+          filters:
+            - SetPath=/api-docs
+
+        - id: client-service
+          uri: http://client-microservice:8085
+          predicates:
+            - Path=/api/clientes/**
+
+        # Swagger Cliente
+        - id: client-service-swagger
+          uri: http://client-microservice:8085
+          predicates:
+            - Path=/swagger/clientes/v3/api-docs
+          filters:
+            - SetPath=/api-docs
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Methods Access-Control-Allow-Headers RETAIN_FIRST
+
+# Swagger Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    use-root-path: true
+    enabled: true
+    urls:
+      - name: pedido
+        url: /swagger/pedido/v3/api-docs
+      - name: delivery
+        url: /swagger/delivery/v3/api-docs
+      - name: produto
+        url: /swagger/produto/v3/api-docs
+      - name: clientes
+        url: /swagger/clientes/v3/api-docs
+
+
