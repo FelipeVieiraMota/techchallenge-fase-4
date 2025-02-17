@@ -1,0 +1,26 @@
+
+services:
+
+  product-catalog-postgres:
+    container_name: product-catalog-postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: product_catalog
+    #networks:
+    #  - microservice-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - product-catalog-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+volumes:
+  product-catalog-data:
