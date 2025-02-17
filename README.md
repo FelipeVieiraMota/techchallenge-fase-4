@@ -1,17 +1,4 @@
 
-boa tarde
-desculpa incomodar
-terias 15 min pra falarmos?
-Lucas Alves — Hoje às 21:28
-# 📌 Documentação da API do Projeto
-
-Abaixo, você encontrará detalhes sobre como acessar e interagir com os serviços disponíveis.
-
----
-Expandir
-message.txt
-4 KB
-﻿
 # 📌 Documentação da API do Projeto
 
 Abaixo, você encontrará detalhes sobre como acessar e interagir com os serviços disponíveis.
