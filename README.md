@@ -87,4 +87,6 @@ Você pode acessar a documentação dos microsserviços via **Swagger UI** atrav
 - PostgreSQL
 - OpenAPI (Swagger UI)
 
-## O Swagger não está funcionando corretamente, pois o Spring Cloud Gateway não está roteando corretamente as requisições.
+## Débitos Técnicos
+
+ - O Swagger não está funcionando corretamente, pois o Spring Cloud Gateway não está roteando corretamente as requisições.
