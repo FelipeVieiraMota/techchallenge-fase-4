@@ -55,6 +55,8 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+    ports:
+      - "9000:9000"
     networks:
       - microservice-network
 
@@ -98,6 +100,8 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+    ports:
+      - "10000:10000"
     networks:
       - microservice-network
 
@@ -135,6 +139,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://product-catalog-postgres:5432/product_catalog
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "11000:11000"
     networks:
       - microservice-network
 
@@ -173,6 +179,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://client-postgres:5432/client
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "12000:12000"
     networks:
       - microservice-network
 
@@ -190,7 +198,7 @@ services:
       - product-catalog
       - client-microservice
     ports:
-      - "8081:8081"
+      - "8080:8080"
     networks:
       - microservice-network
 

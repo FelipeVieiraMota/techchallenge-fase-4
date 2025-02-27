@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   application:
@@ -9,63 +9,70 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOriginPatterns: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
+            allowCredentials: true
+      default-filters:
+        - AddResponseHeader=Access-Control-Allow-Origin, *
+        - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+        - AddResponseHeader=Access-Control-Allow-Headers, Origin, Content-Type, Accept, Authorization
+        - AddResponseHeader=Access-Control-Allow-Credentials, true
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Methods Access-Control-Allow-Headers RETAIN_FIRST
+      
       routes:
+        
         - id: order-management-service
-          uri: http://order-management:8080
+          uri: http://order-management:9000
           predicates:
             - Path=/api/orders/**
 
-        # Swagger Pedido
+        # Swagger Ordem
         - id: order-management-swagger
-          uri: http://order-management:8080
+          uri: http://order-management:9000
           predicates:
             - Path=/swagger/pedido/v3/api-docs
           filters:
             - SetPath=/api-docs
 
         - id: delivery-management-service
-          uri: http://delivery-logistic:8082
+          uri: http://delivery-logistic:10000
           predicates:
             - Path=/api/deliveries/**
 
         # Swagger Delivery
         - id: delivery-management-swagger
-          uri: http://delivery-logistic:8082
+          uri: http://delivery-logistic:10000
           predicates:
             - Path=/swagger/delivery/v3/api-docs
           filters:
             - SetPath=/api-docs
 
         - id: product-catalog-service
-          uri: http://product-catalog:8084
+          uri: http://product-catalog:11000
           predicates:
             - Path=/api/produtos/**
 
         # Swagger Produto
         - id: product-catalog-swagger
-          uri: http://product-catalog:8084
+          uri: http://product-catalog:11000
           predicates:
             - Path=/swagger/produto/v3/api-docs
           filters:
             - SetPath=/api-docs
 
         - id: client-service
-          uri: http://client-microservice:8085
+          uri: http://client-microservice:12000
           predicates:
             - Path=/api/clientes/**
 
         # Swagger Cliente
         - id: client-service-swagger
-          uri: http://client-microservice:8085
+          uri: http://client-microservice:12000
           predicates:
             - Path=/swagger/clientes/v3/api-docs
           filters:
             - SetPath=/api-docs
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Methods Access-Control-Allow-Headers RETAIN_FIRST
 
 # Swagger Configuration
 springdoc:
@@ -73,6 +80,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     use-root-path: true
+    #disable-swagger-default-url: true
     enabled: true
     urls:
       - name: pedido

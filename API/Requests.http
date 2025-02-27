@@ -1,6 +1,6 @@
 
 ### POST
-POST http://localhost:8080/api/orders
+POST http://localhost:9000/api/orders
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 
 ### POST
-POST http://localhost:8080/api/orders
+POST http://localhost:9000/api/orders
 Content-Type: application/json
 
 {
@@ -38,19 +38,19 @@ Content-Type: application/json
 }
 
 ### GET
-GET http://localhost:8081/api/deliveries
+GET http://localhost:10000/api/deliveries
 
 
 ### GET
-GET http://localhost:8080/api/orders
+GET http://localhost:9000/api/orders
 Content-Type: application/json
 
 ### GET by ID
-GET http://localhost:8081/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
+GET http://localhost:9000/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
 Content-Type: application/json
 
 ### PUT
-PUT http://localhost:8081/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
+PUT http://localhost:9000/api/orders/4dadcee0-a879-4790-b6c9-417963b51c6e
 Content-Type: application/json
 
 {
@@ -58,5 +58,5 @@ Content-Type: application/json
 }
 
 ### DELETE
-DELETE http://localhost:8081/api/orders
+DELETE http://localhost:9000/api/orders
 Content-Type: application/json

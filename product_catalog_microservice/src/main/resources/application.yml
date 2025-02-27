@@ -1,6 +1,6 @@
 # Server Configuration
 server:
-  port: 8084
+  port: 11000
 
 # API Name
 spring:
